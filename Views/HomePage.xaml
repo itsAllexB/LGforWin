@@ -11,7 +11,7 @@
         <!-- Header -->
         <StackPanel Grid.Row="0" Spacing="2">
             <TextBlock Text="TVs" Style="{ThemeResource TitleTextBlockStyle}" />
-            <TextBlock Text="Drag a slider to set OLED Light. Select a TV to make it the target for global hotkeys (Ctrl+Alt+Up/Down). Drag cards to reorder."
+            <TextBlock Text="Drag a slider to set OLED Light. Global hotkeys adjust the TV on the screen your cursor is on — pair each TV to its monitor below. Drag cards to reorder."
                        Style="{ThemeResource CaptionTextBlockStyle}" TextWrapping="Wrap"
                        Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
         </StackPanel>

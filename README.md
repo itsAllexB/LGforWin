@@ -8,6 +8,10 @@ nothing. The only real "brightness" control is the TV's **OLED Light (backlight)
 picture setting. LGforWin drives that setting over the network so you can change it
 from your desk — with a slider, the system tray, or global hotkeys.
 
+<p align="center">
+  <img src="docs/screenshots/home.png" alt="LGforWin home screen" width="820">
+</p>
+
 ## Features
 
 - Add TVs by IP; **pair once** (accept the on-screen prompt), then it reconnects
@@ -23,6 +27,24 @@ from your desk — with a slider, the system tray, or global hotkeys.
   (normal window / minimized / tray).
 - **Import / export** all settings; light / dark / system theme.
 - Remembers multiple TVs, their last brightness, and the window size.
+
+## On-screen display
+
+Nudge brightness with the hotkeys and a Windows 11-style overlay slides in — on the
+screen of the TV you're adjusting:
+
+<p align="center">
+  <img src="docs/screenshots/overlay.png" alt="Brightness on-screen display overlay">
+</p>
+
+## Screens
+
+|  |  |
+|:--|:--|
+| **Schedules** — up to 5 daily rules | **Hotkeys** — cursor-targeted, customizable combo |
+| ![Schedules](docs/screenshots/schedule.png) | ![Hotkeys](docs/screenshots/hotkeys.png) |
+| **On-screen display settings** | **Settings** |
+| ![On-screen display settings](docs/screenshots/osd.png) | ![Settings](docs/screenshots/settings.png) |
 
 ## How it works (protocol)
 

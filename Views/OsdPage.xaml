@@ -22,7 +22,7 @@
                 <Grid ColumnDefinitions="*,Auto" VerticalAlignment="Center">
                     <StackPanel Grid.Column="0">
                         <TextBlock Text="Show the on-screen display" />
-                        <TextBlock Text="Briefly pop up the brightness overlay when the hotkeys change the active TV."
+                        <TextBlock Text="Briefly pop up the brightness overlay when the hotkeys change brightness."
                                    Style="{ThemeResource CaptionTextBlockStyle}" TextWrapping="Wrap"
                                    Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
                     </StackPanel>
