@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Page
+    x:Class="LGforWin.Views.OsdPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+    <ScrollViewer Padding="24,12,24,24" HorizontalScrollMode="Disabled">
+        <StackPanel Spacing="16" HorizontalAlignment="Stretch">
+
+            <!-- Header -->
+            <StackPanel Spacing="2">
+                <TextBlock Text="On-screen display" Style="{ThemeResource TitleTextBlockStyle}" />
+                <TextBlock Text="The small overlay shown when you change brightness with the hotkeys."
+                           Style="{ThemeResource CaptionTextBlockStyle}" TextWrapping="Wrap"
+                           Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
+            </StackPanel>
+
+            <!-- Enable -->
+            <Border Padding="16" CornerRadius="8"
+                    Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"
+                    BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}" BorderThickness="1">
+                <Grid ColumnDefinitions="*,Auto" VerticalAlignment="Center">
+                    <StackPanel Grid.Column="0">
+                        <TextBlock Text="Show the on-screen display" />
+                        <TextBlock Text="Briefly pop up the brightness overlay when the hotkeys change the active TV."
+                                   Style="{ThemeResource CaptionTextBlockStyle}" TextWrapping="Wrap"
+                                   Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
+                    </StackPanel>
+                    <ToggleSwitch Grid.Column="1" MinWidth="0"
+                                  IsOn="{x:Bind VM.OsdEnabled, Mode=TwoWay}" />
+                </Grid>
+            </Border>
+
+            <!-- Appearance / placement (disabled when the OSD is off) -->
+            <StackPanel Spacing="8">
+                <TextBlock Text="Appearance &amp; placement" Style="{ThemeResource BodyStrongTextBlockStyle}" />
+                <ContentControl IsTabStop="False" HorizontalAlignment="Stretch" HorizontalContentAlignment="Stretch"
+                                IsEnabled="{x:Bind VM.OsdEnabled, Mode=OneWay}">
+                <Border Padding="16" CornerRadius="8"
+                        Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"
+                        BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}" BorderThickness="1">
+                    <StackPanel Spacing="16">
+
+                        <!-- Position -->
+                        <Grid ColumnDefinitions="*,Auto" VerticalAlignment="Center">
+                            <StackPanel Grid.Column="0">
+                                <TextBlock Text="Position" />
+                                <TextBlock Text="Where on the screen the overlay appears."
+                                           Style="{ThemeResource CaptionTextBlockStyle}"
+                                           Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
+                            </StackPanel>
+                            <ComboBox Grid.Column="1" MinWidth="180"
+                                      SelectedIndex="{x:Bind VM.OsdPosition, Mode=TwoWay}">
+                                <ComboBoxItem Content="Bottom centre" />
+                                <ComboBoxItem Content="Bottom left" />
+                                <ComboBoxItem Content="Bottom right" />
+                                <ComboBoxItem Content="Top centre" />
+                                <ComboBoxItem Content="Top left" />
+                                <ComboBoxItem Content="Top right" />
+                            </ComboBox>
+                        </Grid>
+
+                        <!-- Monitor -->
+                        <Grid ColumnDefinitions="*,Auto" VerticalAlignment="Center">
+                            <StackPanel Grid.Column="0">
+                                <TextBlock Text="Show on" />
+                                <TextBlock Text="Which screen the overlay appears on. &quot;The TV I'm adjusting&quot; uses the screen you pair to each TV on the Home page."
+                                           Style="{ThemeResource CaptionTextBlockStyle}" TextWrapping="Wrap"
+                                           Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
+                            </StackPanel>
+                            <ComboBox Grid.Column="1" MinWidth="220"
+                                      SelectedIndex="{x:Bind VM.OsdMonitor, Mode=TwoWay}">
+                                <ComboBoxItem Content="Primary monitor" />
+                                <ComboBoxItem Content="Screen of the TV I'm adjusting" />
+                                <ComboBoxItem Content="Screen under my cursor" />
+                            </ComboBox>
+                        </Grid>
+
+                        <!-- Duration -->
+                        <Grid ColumnDefinitions="*,Auto" VerticalAlignment="Center">
+                            <StackPanel Grid.Column="0">
+                                <TextBlock>
+                                    <Run Text="Stays on screen for" />
+                                    <Run x:Name="DurationValue" FontWeight="SemiBold" /><Run Text=" s" FontWeight="SemiBold" />
+                                </TextBlock>
+                                <TextBlock Text="How long the overlay lingers before it fades away."
+                                           Style="{ThemeResource CaptionTextBlockStyle}"
+                                           Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
+                            </StackPanel>
+                            <Slider Grid.Column="1" x:Name="DurationSlider" Width="180"
+                                    Minimum="0.5" Maximum="5" StepFrequency="0.1" SmallChange="0.1"
+                                    Value="{x:Bind VM.OsdTimeoutSeconds, Mode=TwoWay}"
+                                    ValueChanged="OnDurationChanged" />
+                        </Grid>
+
+                        <!-- Show TV name -->
+                        <Grid ColumnDefinitions="*,Auto" VerticalAlignment="Center">
+                            <StackPanel Grid.Column="0">
+                                <TextBlock Text="Show the TV name" />
+                                <TextBlock Text="Display the targeted TV's name above the brightness bar — handy with several TVs."
+                                           Style="{ThemeResource CaptionTextBlockStyle}" TextWrapping="Wrap"
+                                           Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
+                            </StackPanel>
+                            <ToggleSwitch Grid.Column="1" MinWidth="0"
+                                          IsOn="{x:Bind VM.OsdShowTvName, Mode=TwoWay}" />
+                        </Grid>
+
+                        <!-- Show on schedule -->
+                        <Grid ColumnDefinitions="*,Auto" VerticalAlignment="Center">
+                            <StackPanel Grid.Column="0">
+                                <TextBlock Text="Show when a schedule runs" />
+                                <TextBlock Text="Also pop up the overlay when a schedule changes brightness, not just the hotkeys."
+                                           Style="{ThemeResource CaptionTextBlockStyle}" TextWrapping="Wrap"
+                                           Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
+                            </StackPanel>
+                            <ToggleSwitch Grid.Column="1" MinWidth="0"
+                                          IsOn="{x:Bind VM.OsdOnSchedule, Mode=TwoWay}" />
+                        </Grid>
+
+                        <!-- Preview -->
+                        <Grid ColumnDefinitions="*,Auto" VerticalAlignment="Center">
+                            <StackPanel Grid.Column="0">
+                                <TextBlock Text="Preview" />
+                                <TextBlock Text="Show the overlay now with the current settings."
+                                           Style="{ThemeResource CaptionTextBlockStyle}"
+                                           Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
+                            </StackPanel>
+                            <Button Grid.Column="1" Content="Preview" Click="OnPreviewClick" />
+                        </Grid>
+
+                    </StackPanel>
+                </Border>
+                </ContentControl>
+            </StackPanel>
+        </StackPanel>
+    </ScrollViewer>
+</Page>

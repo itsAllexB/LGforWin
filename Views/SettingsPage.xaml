@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Page
+    x:Class="LGforWin.Views.SettingsPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+    <ScrollViewer Padding="24,12,24,24" HorizontalScrollMode="Disabled">
+        <StackPanel Spacing="20" HorizontalAlignment="Stretch">
+
+            <TextBlock Text="Settings" Style="{ThemeResource TitleTextBlockStyle}" />
+
+            <!-- Appearance -->
+            <StackPanel Spacing="8">
+                <TextBlock Text="Appearance" Style="{ThemeResource BodyStrongTextBlockStyle}" />
+                <Border Padding="16" CornerRadius="8"
+                        Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"
+                        BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}" BorderThickness="1">
+                    <Grid ColumnDefinitions="*,Auto" VerticalAlignment="Center">
+                        <StackPanel Grid.Column="0" VerticalAlignment="Center">
+                            <TextBlock Text="App theme" />
+                            <TextBlock Text="Choose light, dark, or follow Windows."
+                                       Style="{ThemeResource CaptionTextBlockStyle}"
+                                       Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
+                        </StackPanel>
+                        <ComboBox Grid.Column="1" MinWidth="160" SelectedIndex="{x:Bind VM.ThemeIndex, Mode=TwoWay}">
+                            <ComboBoxItem Content="Use system setting" />
+                            <ComboBoxItem Content="Light" />
+                            <ComboBoxItem Content="Dark" />
+                        </ComboBox>
+                    </Grid>
+                </Border>
+            </StackPanel>
+
+            <!-- Behaviour -->
+            <StackPanel Spacing="8">
+                <TextBlock Text="Behaviour" Style="{ThemeResource BodyStrongTextBlockStyle}" />
+                <Border Padding="16" CornerRadius="8"
+                        Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"
+                        BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}" BorderThickness="1">
+                    <StackPanel Spacing="16">
+                        <Grid ColumnDefinitions="*,Auto" VerticalAlignment="Center">
+                            <StackPanel Grid.Column="0">
+                                <TextBlock Text="Start with Windows" />
+                                <TextBlock Text="Launch automatically when you sign in."
+                                           Style="{ThemeResource CaptionTextBlockStyle}"
+                                           Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
+                            </StackPanel>
+                            <ToggleSwitch Grid.Column="1" MinWidth="0"
+                                          IsOn="{x:Bind VM.StartWithWindows, Mode=TwoWay}" />
+                        </Grid>
+
+                        <ContentControl IsTabStop="False" HorizontalAlignment="Stretch" HorizontalContentAlignment="Stretch"
+                                        IsEnabled="{x:Bind VM.StartWithWindows, Mode=OneWay}">
+                            <Grid ColumnDefinitions="*,Auto" VerticalAlignment="Center">
+                                <StackPanel Grid.Column="0">
+                                    <TextBlock Text="When started with Windows, open" />
+                                    <TextBlock Text="Only applies at sign-in — launching the app yourself always opens the window."
+                                               Style="{ThemeResource CaptionTextBlockStyle}" TextWrapping="Wrap"
+                                               Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
+                                </StackPanel>
+                                <ComboBox Grid.Column="1" MinWidth="160"
+                                          SelectedIndex="{x:Bind VM.LaunchBehavior, Mode=TwoWay}">
+                                    <ComboBoxItem Content="Normal window" />
+                                    <ComboBoxItem Content="Minimized" />
+                                    <ComboBoxItem Content="System tray" />
+                                </ComboBox>
+                            </Grid>
+                        </ContentControl>
+                    </StackPanel>
+                </Border>
+            </StackPanel>
+
+            <!-- Backup -->
+            <StackPanel Spacing="8">
+                <TextBlock Text="Backup" Style="{ThemeResource BodyStrongTextBlockStyle}" />
+                <Border Padding="16" CornerRadius="8"
+                        Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"
+                        BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}" BorderThickness="1">
+                    <Grid ColumnDefinitions="*,Auto" VerticalAlignment="Center">
+                        <StackPanel Grid.Column="0">
+                            <TextBlock Text="Import / export settings" />
+                            <TextBlock Text="Save all TVs (including pairing), schedules and preferences to a single file, or restore from one."
+                                       Style="{ThemeResource CaptionTextBlockStyle}" TextWrapping="Wrap"
+                                       Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
+                        </StackPanel>
+                        <StackPanel Grid.Column="1" Orientation="Horizontal" Spacing="8" VerticalAlignment="Center">
+                            <Button Content="Export…" Click="OnExportClick" />
+                            <Button Content="Import…" Click="OnImportClick" />
+                        </StackPanel>
+                    </Grid>
+                </Border>
+            </StackPanel>
+
+            <TextBlock Style="{ThemeResource CaptionTextBlockStyle}"
+                       Foreground="{ThemeResource TextFillColorSecondaryBrush}">
+                <Run Text="LGforWin · controls LG webOS TV OLED Light over the network." />
+            </TextBlock>
+        </StackPanel>
+    </ScrollViewer>
+</Page>

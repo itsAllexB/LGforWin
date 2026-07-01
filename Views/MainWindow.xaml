@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Window
+    x:Class="LGforWin.Views.MainWindow"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:tb="using:H.NotifyIcon">
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+
+        <tb:TaskbarIcon x:Name="TrayIcon"
+                        IconSource="ms-appx:///Assets/app.ico"
+                        ToolTipText="LGforWin — LG TV brightness">
+            <tb:TaskbarIcon.ContextFlyout>
+                <MenuFlyout>
+                    <MenuFlyoutItem x:Name="MenuShow" Text="Show LGforWin" />
+                    <MenuFlyoutSeparator />
+                    <MenuFlyoutItem x:Name="MenuQuit" Text="Quit" />
+                </MenuFlyout>
+            </tb:TaskbarIcon.ContextFlyout>
+        </tb:TaskbarIcon>
+
+        <!-- Standard WinUI title bar control: app icon + title, Mica-aware, handles drag
+             regions, and hosts the nav pane-toggle button. -->
+        <TitleBar x:Name="AppTitleBar" Grid.Row="0"
+                  Height="48"
+                  Title="LGforWin"
+                  IsBackButtonVisible="False"
+                  IsPaneToggleButtonVisible="False">
+            <TitleBar.IconSource>
+                <BitmapIconSource UriSource="ms-appx:///Assets/app.ico" ShowAsMonochrome="False" />
+            </TitleBar.IconSource>
+        </TitleBar>
+
+        <NavigationView x:Name="NavView" Grid.Row="1"
+                        IsBackButtonVisible="Collapsed"
+                        IsSettingsVisible="False"
+                        IsPaneToggleButtonVisible="True"
+                        PaneDisplayMode="LeftCompact"
+                        SelectionChanged="NavView_SelectionChanged">
+            <NavigationView.MenuItems>
+                <NavigationViewItem Tag="home" Content="Home">
+                    <NavigationViewItem.Icon>
+                        <FontIcon Glyph="&#xE80F;" />
+                    </NavigationViewItem.Icon>
+                </NavigationViewItem>
+                <NavigationViewItem Tag="schedule" Content="Schedule">
+                    <NavigationViewItem.Icon>
+                        <FontIcon Glyph="&#xE823;" />
+                    </NavigationViewItem.Icon>
+                </NavigationViewItem>
+                <NavigationViewItem Tag="hotkeys" Content="Hotkeys">
+                    <NavigationViewItem.Icon>
+                        <FontIcon Glyph="&#xE765;" />
+                    </NavigationViewItem.Icon>
+                </NavigationViewItem>
+                <NavigationViewItem Tag="osd" Content="On-screen display">
+                    <NavigationViewItem.Icon>
+                        <FontIcon Glyph="&#xE7F4;" />
+                    </NavigationViewItem.Icon>
+                </NavigationViewItem>
+            </NavigationView.MenuItems>
+            <NavigationView.FooterMenuItems>
+                <NavigationViewItem Tag="settings" Content="Settings">
+                    <NavigationViewItem.Icon>
+                        <FontIcon Glyph="&#xE713;" />
+                    </NavigationViewItem.Icon>
+                </NavigationViewItem>
+            </NavigationView.FooterMenuItems>
+
+            <Frame x:Name="ContentFrame" />
+        </NavigationView>
+    </Grid>
+</Window>
