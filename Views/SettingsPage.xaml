@@ -93,7 +93,9 @@
 
             <TextBlock Style="{ThemeResource CaptionTextBlockStyle}"
                        Foreground="{ThemeResource TextFillColorSecondaryBrush}">
-                <Run Text="LGforWin · controls LG webOS TV OLED Light over the network." />
+                <Run Text="LGforWin" FontWeight="SemiBold" />
+                <Run Text="{x:Bind VM.AppVersion}" />
+                <Run Text="· controls LG webOS TV OLED Light over the network." />
             </TextBlock>
         </StackPanel>
     </ScrollViewer>

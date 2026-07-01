@@ -24,6 +24,10 @@ public sealed partial class MainViewModel : ObservableObject, IDisposable
     /// <summary>Connected displays, for pairing each TV to the screen it drives. Refreshed on demand.</summary>
     public ObservableCollection<MonitorInfo> Monitors { get; } = new();
 
+    /// <summary>App version for the UI footer, e.g. "v1.0.0".</summary>
+    public string AppVersion { get; } =
+        "v" + (System.Reflection.Assembly.GetExecutingAssembly().GetName().Version?.ToString(3) ?? "1.0.0");
+
     public AppSettings Settings { get; }
 
     /// <summary>Raised when the user changes the theme (0=system,1=light,2=dark); App applies it.</summary>
