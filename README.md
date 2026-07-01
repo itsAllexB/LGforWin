@@ -103,8 +103,21 @@ pwsh -File build.ps1 -Configuration Debug -Run
 
 ## Roadmap
 
-SSDP auto-discovery, extra picture sliders (contrast / black level / energy-saving),
-MSIX packaging / installer, sunrise-sunset auto-dim.
+Ideas and next steps after v1.0 (also tracked in [`Todo.md`](Todo.md)):
+
+**Distribution & polish**
+- A real app icon (replacing the placeholder sun)
+- Code signing — removes the SmartScreen first-run warning
+- An installer (Inno Setup `setup.exe`) alongside the portable zip
+
+**Features**
+- SSDP auto-discovery — find TVs on the LAN instead of typing IPs
+- Extra picture sliders (contrast / black level / energy-saving)
+- Sunrise–sunset auto-dim
+- Per-TV schedule targeting (schedules currently apply to all TVs)
+
+**Maybe / later**
+- MSIX packaging, an "Identify screens" pairing helper, optional per-TV hotkey combos
 
 ## License
 

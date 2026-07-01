@@ -31,6 +31,3 @@ project.lock.json
 Thumbs.db
 Desktop.ini
 .DS_Store
-
-# Local scratch (personal, not part of the project)
-Todo.md
