@@ -21,6 +21,19 @@ internal static class SsapPayloads
     public const string CloseAlert = "ssap://system.notifications/closeAlert";
     public const string LunaSetSystemSettings = "com.webos.settingsservice/setSystemSettings";
 
+    // Power: full power-off, and "screen off" (panel blanked, webOS keeps running so the
+    // picture returns instantly). The tvpower service is current firmware; tv.power is the
+    // pre-2018 name, kept as a fallback.
+    public const string TurnOff = "ssap://system/turnOff";
+
+    // Reports "Active", "Screen Off", "Suspend" or "Power Off". Doubles as a liveness probe:
+    // a reply proves the socket is alive, silence proves it isn't.
+    public const string GetPowerState = "ssap://com.webos.service.tvpower/power/getPowerState";
+    public const string TurnOffScreen = "ssap://com.webos.service.tvpower/power/turnOffScreen";
+    public const string TurnOnScreen = "ssap://com.webos.service.tvpower/power/turnOnScreen";
+    public const string TurnOffScreenLegacy = "ssap://com.webos.service.tv.power/power/turnOffScreen";
+    public const string TurnOnScreenLegacy = "ssap://com.webos.service.tv.power/power/turnOnScreen";
+
     /// <summary>
     /// Builds the registration payload. When a stored client-key is supplied the TV
     /// re-authorizes silently; otherwise it shows the on-screen accept prompt.

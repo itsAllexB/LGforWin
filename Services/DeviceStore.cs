@@ -100,7 +100,7 @@ public sealed class BackupData
 public sealed class AppSettings
 {
     /// <summary>How many points the brightness hotkeys nudge per press.</summary>
-    public int HotkeyStep { get; set; } = 5;
+    public int HotkeyStep { get; set; } = 10;
 
     /// <summary>Modifier bitmask for the brightness hotkeys (MOD_ALT=1, MOD_CONTROL=2, MOD_SHIFT=4,
     /// MOD_WIN=8). Combined with the Up/Down arrow keys. Default = Ctrl+Alt (3).</summary>
@@ -131,6 +131,40 @@ public sealed class AppSettings
 
     /// <summary>On-screen display (brightness OSD) preferences. Never null after load.</summary>
     public OsdSettings Osd { get; set; } = new();
+
+    /// <summary>TV power automation (follow PC startup/sleep/shutdown/display sleep). Never null after load.</summary>
+    public PowerSettings Power { get; set; } = new();
+}
+
+/// <summary>
+/// Rules for automatically turning the TVs on and off with the PC. All rules apply to
+/// every TV. Everything is off by default — pure opt-in.
+/// </summary>
+public sealed class PowerSettings
+{
+    /// <summary>Wake the TVs (WoL) whenever the app starts — with autostart on, that's sign-in.</summary>
+    public bool OnAppStart { get; set; }
+
+    /// <summary>Wake the TVs (WoL) when the PC resumes from sleep or hibernation.</summary>
+    public bool OnResume { get; set; }
+
+    /// <summary>Turn the TVs off when the PC goes to sleep or hibernates.</summary>
+    public bool OffOnSleep { get; set; }
+
+    /// <summary>Turn the TVs off when the PC shuts down, restarts or the user signs out.</summary>
+    public bool OffOnShutdown { get; set; }
+
+    /// <summary>React when Windows turns the displays off after the idle timeout.</summary>
+    public bool FollowDisplayOff { get; set; }
+
+    /// <summary>
+    /// What <see cref="FollowDisplayOff"/> does: 0 = screen off (panel blanked, instant resume),
+    /// 1 = full power off (needs Wake-on-LAN to come back).
+    /// </summary>
+    public int DisplayOffAction { get; set; } = 0;
+
+    /// <summary>Wake the TVs when Windows turns the displays back on.</summary>
+    public bool FollowDisplayOn { get; set; }
 }
 
 /// <summary>

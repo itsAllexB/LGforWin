@@ -52,6 +52,11 @@
                         <FontIcon Glyph="&#xE823;" />
                     </NavigationViewItem.Icon>
                 </NavigationViewItem>
+                <NavigationViewItem Tag="power" Content="Power">
+                    <NavigationViewItem.Icon>
+                        <FontIcon Glyph="&#xE7E8;" />
+                    </NavigationViewItem.Icon>
+                </NavigationViewItem>
                 <NavigationViewItem Tag="hotkeys" Content="Hotkeys">
                     <NavigationViewItem.Icon>
                         <FontIcon Glyph="&#xE765;" />

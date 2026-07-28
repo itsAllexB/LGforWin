@@ -33,4 +33,10 @@ public sealed class TvDevice
     /// reconnects try the working transport first instead of timing out on ws://:3000.
     /// </summary>
     public bool Secure { get; set; }
+
+    /// <summary>
+    /// The TV's MAC address ("AA:BB:CC:DD:EE:FF"), learned via ARP the first time we connect
+    /// and needed to wake the TV over the network (Wake-on-LAN) once it's off. Empty until learned.
+    /// </summary>
+    public string MacAddress { get; set; } = "";
 }

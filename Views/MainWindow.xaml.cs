@@ -66,6 +66,7 @@ public sealed partial class MainWindow : Window
         {
             case "home": ContentFrame.Navigate(typeof(HomePage)); break;
             case "schedule": ContentFrame.Navigate(typeof(SchedulePage)); break;
+            case "power": ContentFrame.Navigate(typeof(PowerPage)); break;
             case "hotkeys": ContentFrame.Navigate(typeof(HotkeysPage)); break;
             case "osd": ContentFrame.Navigate(typeof(OsdPage)); break;
             case "settings": ContentFrame.Navigate(typeof(SettingsPage)); break;

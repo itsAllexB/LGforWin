@@ -15,6 +15,7 @@ public partial class App : Application
     private ScheduleService? _schedules;
     private DispatcherQueue? _dispatcher;
     private BrightnessOverlay? _overlay;
+    private PowerEventService? _powerEvents;
 
     /// <summary>Shared application view model, accessed by the navigation pages.</summary>
     public MainViewModel? ViewModel => _vm;
@@ -65,6 +66,47 @@ public partial class App : Application
         // at-sign-in autostart launch (tagged with --autostart on the Run entry).
         var isAutostart = Environment.GetCommandLineArgs().Contains(AutostartService.AutostartArg);
         ApplyLaunchBehavior(_window, isAutostart ? _vm.Settings.LaunchBehavior : 0);
+
+        WirePowerAutomation();
+    }
+
+    // Connects the Windows power lifecycle to the TV power rules (Power page). The main
+    // window's HWND outlives hide-to-tray, so it can carry the power notifications.
+    private void WirePowerAutomation()
+    {
+        _powerEvents = new PowerEventService(MainWindowHandle);
+
+        // Sleep and shutdown give handlers only a couple of seconds — send the off
+        // commands over the already-open sockets and wait briefly, then let go.
+        _powerEvents.Suspending += () =>
+        {
+            if (_vm?.Settings.Power.OffOnSleep == true) _vm.TurnOffAllAsync().Wait(1500);
+        };
+        _powerEvents.SessionEnding += () =>
+        {
+            if (_vm?.Settings.Power.OffOnShutdown == true) _vm.TurnOffAllAsync().Wait(2000);
+        };
+
+        _powerEvents.Resumed += () =>
+        {
+            if (_vm?.Settings.Power.OnResume == true) _ = _vm.PowerOnAllAsync();
+        };
+
+        _powerEvents.DisplayStateChanged += on =>
+        {
+            var power = _vm?.Settings.Power;
+            if (power is null) return;
+            if (!on && power.FollowDisplayOff)
+                _ = power.DisplayOffAction == 1 ? _vm!.TurnOffAllAsync() : _vm!.ScreenOffAllAsync();
+            else if (on && power.FollowDisplayOn)
+                _ = _vm!.PowerOnAllAsync();
+        };
+
+        // "Turn on when the PC starts": the app just started, so wake the TVs now. WoL
+        // reaches TVs that are off; ones already on simply ignore it (screen-on is a no-op
+        // here because no connection exists yet — the reconnect loop is racing in parallel).
+        if (_vm!.Settings.Power.OnAppStart)
+            _ = _vm.PowerOnAllAsync();
     }
 
     // Opens the window per the launch preference (0 = normal window, 1 = minimized, 2 = tray).
@@ -140,6 +182,8 @@ public partial class App : Application
     /// <summary>Releases hotkeys, sockets and persists state before exit.</summary>
     public void ShutdownServices()
     {
+        _powerEvents?.Dispose();
+        _powerEvents = null;
         _hotkeys?.Dispose();
         _hotkeys = null;
         _schedules?.Dispose();

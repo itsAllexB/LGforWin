@@ -1,6 +1,7 @@
 # Build output
 [Bb]in/
 [Oo]bj/
+dist/
 [Dd]ebug/
 [Rr]elease/
 x64/

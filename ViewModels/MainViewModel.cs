@@ -250,8 +250,82 @@ public sealed partial class MainViewModel : ObservableObject, IDisposable
         }
     }
 
+    // ----- TV power automation (all TVs) -----
+
+    /// <summary>Wake the TVs whenever the app starts (with autostart, that's Windows sign-in).</summary>
+    public bool PowerOnAppStart
+    {
+        get => Settings.Power.OnAppStart;
+        set { if (value != Settings.Power.OnAppStart) { Settings.Power.OnAppStart = value; SaveSettings(); OnPropertyChanged(); } }
+    }
+
+    /// <summary>Wake the TVs when the PC resumes from sleep.</summary>
+    public bool PowerOnResume
+    {
+        get => Settings.Power.OnResume;
+        set { if (value != Settings.Power.OnResume) { Settings.Power.OnResume = value; SaveSettings(); OnPropertyChanged(); } }
+    }
+
+    /// <summary>Turn the TVs off when the PC goes to sleep.</summary>
+    public bool PowerOffOnSleep
+    {
+        get => Settings.Power.OffOnSleep;
+        set { if (value != Settings.Power.OffOnSleep) { Settings.Power.OffOnSleep = value; SaveSettings(); OnPropertyChanged(); } }
+    }
+
+    /// <summary>Turn the TVs off when the PC shuts down, restarts or signs out.</summary>
+    public bool PowerOffOnShutdown
+    {
+        get => Settings.Power.OffOnShutdown;
+        set { if (value != Settings.Power.OffOnShutdown) { Settings.Power.OffOnShutdown = value; SaveSettings(); OnPropertyChanged(); } }
+    }
+
+    /// <summary>React when Windows turns the displays off after the idle timeout.</summary>
+    public bool PowerFollowDisplayOff
+    {
+        get => Settings.Power.FollowDisplayOff;
+        set { if (value != Settings.Power.FollowDisplayOff) { Settings.Power.FollowDisplayOff = value; SaveSettings(); OnPropertyChanged(); } }
+    }
+
+    /// <summary>0 = screen off (instant resume), 1 = full power off (wakes via WoL).</summary>
+    public int PowerDisplayOffAction
+    {
+        get => Settings.Power.DisplayOffAction;
+        set { if (value != Settings.Power.DisplayOffAction) { Settings.Power.DisplayOffAction = value; SaveSettings(); OnPropertyChanged(); } }
+    }
+
+    /// <summary>Wake the TVs when Windows turns the displays back on.</summary>
+    public bool PowerFollowDisplayOn
+    {
+        get => Settings.Power.FollowDisplayOn;
+        set { if (value != Settings.Power.FollowDisplayOn) { Settings.Power.FollowDisplayOn = value; SaveSettings(); OnPropertyChanged(); } }
+    }
+
+    /// <summary>Turns every TV fully off. Awaitable so shutdown/sleep handlers can block briefly on it.</summary>
+    public Task TurnOffAllAsync() => Task.WhenAll(Tvs.Select(t => t.TurnOffAsync()));
+
+    /// <summary>Blanks every TV's panel (webOS keeps running, resume is instant).</summary>
+    public Task ScreenOffAllAsync() => Task.WhenAll(Tvs.Select(t => t.ScreenOffAsync()));
+
+    /// <summary>Powers every TV on — un-blanks connected ones, wakes the rest via WoL.</summary>
+    public Task PowerOnAllAsync() => Task.WhenAll(Tvs.Select(t => t.PowerOnAsync()));
+
+    // ----- Adding TVs -----
+
     public bool CanAdd => !string.IsNullOrWhiteSpace(NewHost);
     partial void OnNewHostChanged(string value) => AddTvCommand.NotifyCanExecuteChanged();
+
+    /// <summary>True when a TV with this host/IP is already in the list (used by discovery).</summary>
+    public bool HasTvWithHost(string host) =>
+        Tvs.Any(t => string.Equals(t.Host, host, StringComparison.OrdinalIgnoreCase));
+
+    /// <summary>Adds a TV found by network discovery (no-op if its IP is already added).</summary>
+    public void AddDiscoveredTv(string name, string host)
+    {
+        if (HasTvWithHost(host)) return;
+        Add(new TvDevice { Name = name, Host = host }, start: true);
+        Persist();
+    }
 
     [RelayCommand(CanExecute = nameof(CanAdd))]
     private void AddTv()
@@ -447,6 +521,7 @@ public sealed partial class MainViewModel : ObservableObject, IDisposable
         Settings.ThemeIndex = s.ThemeIndex;
         Settings.ApplyScheduleOnStartup = s.ApplyScheduleOnStartup;
         Settings.Osd = s.Osd;
+        Settings.Power = s.Power;
         Settings.Schedules = s.Schedules;
 
         Schedules.Clear();
@@ -465,6 +540,13 @@ public sealed partial class MainViewModel : ObservableObject, IDisposable
         OnPropertyChanged(nameof(OsdTimeoutSeconds));
         OnPropertyChanged(nameof(OsdShowTvName));
         OnPropertyChanged(nameof(OsdOnSchedule));
+        OnPropertyChanged(nameof(PowerOnAppStart));
+        OnPropertyChanged(nameof(PowerOnResume));
+        OnPropertyChanged(nameof(PowerOffOnSleep));
+        OnPropertyChanged(nameof(PowerOffOnShutdown));
+        OnPropertyChanged(nameof(PowerFollowDisplayOff));
+        OnPropertyChanged(nameof(PowerDisplayOffAction));
+        OnPropertyChanged(nameof(PowerFollowDisplayOn));
         OnPropertyChanged(nameof(HotkeyCtrl));
         OnPropertyChanged(nameof(HotkeyAlt));
         OnPropertyChanged(nameof(HotkeyShift));

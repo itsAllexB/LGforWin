@@ -32,6 +32,8 @@ public sealed partial class TvViewModel : ObservableObject, IDisposable
         _controller.StatusChanged += OnStatusChanged;
         _controller.ClientKeyUpdated += _ => _persist();
         _controller.BacklightReported += OnBacklightReported;
+        _controller.MacAddressResolved += _ => _persist(); // keep the learned MAC for WoL
+        _controller.PowerStateReported += OnPowerStateReported;
     }
 
     public TvDevice Device { get; }
@@ -102,6 +104,24 @@ public sealed partial class TvViewModel : ObservableObject, IDisposable
 
     public Task StartAsync() => _controller.StartAsync();
 
+    // ----- Power -----
+
+    public Task<bool> TurnOffAsync() => _controller.TurnOffAsync();
+    public Task<bool> ScreenOffAsync() => _controller.ScreenOffAsync();
+    public Task PowerOnAsync() => _controller.PowerOnAsync();
+
+    /// <summary>The Home-page power button: turns the TV off when it's awake, wakes it when it isn't.</summary>
+    public async Task TogglePowerAsync()
+    {
+        if (!IsConnected && !_controller.CanWake)
+        {
+            _dispatcher.TryEnqueue(() =>
+                StatusText = "Can't wake yet — connect once so the MAC address is learned");
+            return;
+        }
+        await _controller.TogglePowerAsync();
+    }
+
     private void OnStatusChanged(TvStatus status, string? message)
     {
         _dispatcher.TryEnqueue(() =>
@@ -115,6 +135,23 @@ public sealed partial class TvViewModel : ObservableObject, IDisposable
                 TvStatus.AwaitingPairing => "Accept the prompt on your TV",
                 TvStatus.Error => "Error",
                 _ => "Disconnected"
+            };
+        });
+    }
+
+    // The socket can be perfectly healthy while the TV itself is in standby, so say which it is
+    // rather than a bare "Connected".
+    private void OnPowerStateReported(string state)
+    {
+        _dispatcher.TryEnqueue(() =>
+        {
+            if (!IsConnected) return; // a status change is already describing the connection
+            StatusText = state switch
+            {
+                var s when s.Contains("Screen Off", StringComparison.OrdinalIgnoreCase) => "Connected · screen off",
+                var s when s.Contains("Suspend", StringComparison.OrdinalIgnoreCase)
+                        || s.Contains("Power Off", StringComparison.OrdinalIgnoreCase) => "Connected · TV is off",
+                _ => "Connected"
             };
         });
     }

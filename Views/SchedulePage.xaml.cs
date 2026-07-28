@@ -11,6 +11,8 @@ public sealed partial class SchedulePage : Page
     public SchedulePage()
     {
         InitializeComponent();
+        // The page isn't observable, so EmptyVisibility binds OneTime and is
+        // re-evaluated here whenever the schedule list grows or shrinks.
         VM.Schedules.CollectionChanged += (_, _) => Bindings.Update();
     }
 
