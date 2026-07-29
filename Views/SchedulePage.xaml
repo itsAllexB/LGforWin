@@ -10,7 +10,7 @@
         <!-- Header -->
         <StackPanel Grid.Row="0" Spacing="2">
             <TextBlock Text="Schedule" Style="{ThemeResource TitleTextBlockStyle}" />
-            <TextBlock Text="Automatically set brightness at times of day (applies to all TVs). Up to 5 schedules."
+            <TextBlock Text="Automatically set brightness at times of day (applies to all TVs). Up to 10 schedules."
                        Style="{ThemeResource CaptionTextBlockStyle}" TextWrapping="Wrap"
                        Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
         </StackPanel>

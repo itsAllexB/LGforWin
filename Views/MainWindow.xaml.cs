@@ -42,6 +42,12 @@ public sealed partial class MainWindow : Window
         ExtendsContentIntoTitleBar = true;
         SetTitleBar(AppTitleBar);
 
+        // Keep the system caption buttons readable whenever the effective theme changes —
+        // including Windows itself switching light/dark while we follow the system.
+        if (Content is FrameworkElement content)
+            content.ActualThemeChanged += (_, _) => ApplyCaptionButtonTheme();
+        ApplyCaptionButtonTheme();
+
         var show = new RelayCommand(ShowFromTray);
         TrayIcon.LeftClickCommand = show;
         MenuShow.Command = show;
@@ -83,6 +89,31 @@ public sealed partial class MainWindow : Window
                 2 => ElementTheme.Dark,
                 _ => ElementTheme.Default
             };
+        ApplyCaptionButtonTheme();
+    }
+
+    // The min/max/close buttons are drawn by the system, and with a custom title bar their
+    // colors follow the WINDOWS theme — not the app theme. Pick the app dark while Windows
+    // is light and they render dark-on-dark, near invisible. So recolor them to match the
+    // app's effective theme whenever it changes.
+    private void ApplyCaptionButtonTheme()
+    {
+        if (Content is not FrameworkElement root) return;
+        var titleBar = AppWindow.TitleBar;
+        var dark = root.ActualTheme == ElementTheme.Dark;
+
+        Windows.UI.Color Fg(byte a) => dark
+            ? Windows.UI.Color.FromArgb(a, 255, 255, 255)
+            : Windows.UI.Color.FromArgb(a, 0, 0, 0);
+
+        titleBar.ButtonBackgroundColor = Microsoft.UI.Colors.Transparent;
+        titleBar.ButtonInactiveBackgroundColor = Microsoft.UI.Colors.Transparent;
+        titleBar.ButtonForegroundColor = Fg(255);
+        titleBar.ButtonInactiveForegroundColor = Fg(112);
+        titleBar.ButtonHoverForegroundColor = Fg(255);
+        titleBar.ButtonHoverBackgroundColor = Fg(24);
+        titleBar.ButtonPressedForegroundColor = Fg(255);
+        titleBar.ButtonPressedBackgroundColor = Fg(41);
     }
 
     public void ShowFromTray()

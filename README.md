@@ -14,12 +14,12 @@ from your desk — with a slider, the system tray, or global hotkeys.
 
 ## Download
 
-**[⬇ Download LGforWin v2.0.0](https://github.com/itsAllexB/LGforWin/releases/latest)**
+**[⬇ Download LGforWin v2.1.0](https://github.com/itsAllexB/LGforWin/releases/latest)**
 
 | | |
 |---|---|
-| [`LGforWin-2.0.0-setup.exe`](https://github.com/itsAllexB/LGforWin/releases/latest/download/LGforWin-2.0.0-setup.exe) | Installer — Start-menu shortcut and an uninstall entry. |
-| [`LGforWin-2.0.0-win-x64.zip`](https://github.com/itsAllexB/LGforWin/releases/latest/download/LGforWin-2.0.0-win-x64.zip) | Portable — unzip and run `LGforWin.exe`. |
+| [`LGforWin-2.1.0-setup.exe`](https://github.com/itsAllexB/LGforWin/releases/latest/download/LGforWin-2.1.0-setup.exe) | Installer — Start-menu shortcut and an uninstall entry. |
+| [`LGforWin-2.1.0-win-x64.zip`](https://github.com/itsAllexB/LGforWin/releases/latest/download/LGforWin-2.1.0-win-x64.zip) | Portable — unzip and run `LGforWin.exe`. |
 
 64-bit Windows 10 1809 or newer. Nothing else to install — the .NET runtime and the
 Windows App SDK are bundled. The build isn't code-signed yet, so SmartScreen shows an
@@ -41,7 +41,8 @@ Windows App SDK are bundled. The build isn't code-signed yet, so SmartScreen sho
   Ten points per press by default, adjustable 1–25.
 - **On-screen display** — a Windows 11-style brightness overlay on the hotkey, with
   configurable position, screen, duration and optional TV name.
-- **Schedules** — up to 5 daily brightness rules, with catch-up on startup.
+- **Schedules** — up to 10 daily brightness rules, with catch-up on startup, after PC
+  sleep, and for TVs that were off when a schedule fired (applied the moment they're back).
 - **System tray** icon — closing hides to tray; optional **launch at sign-in**
   (normal window / minimized / tray).
 - **Import / export** all settings; light / dark / system theme.
@@ -60,7 +61,7 @@ screen of the TV you're adjusting:
 
 |  |  |
 |:--|:--|
-| **Power** — follow the PC's sleep, shutdown and display timer | **Schedules** — up to 5 daily rules |
+| **Power** — follow the PC's sleep, shutdown and display timer | **Schedules** — up to 10 daily rules |
 | ![Power](docs/screenshots/power.png) | ![Schedules](docs/screenshots/schedule.png) |
 | **Hotkeys** — cursor-targeted, customizable combo | **On-screen display settings** |
 | ![Hotkeys](docs/screenshots/hotkeys.png) | ![On-screen display settings](docs/screenshots/osd.png) |

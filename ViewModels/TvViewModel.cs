@@ -149,7 +149,8 @@ public sealed partial class TvViewModel : ObservableObject, IDisposable
             StatusText = state switch
             {
                 var s when s.Contains("Screen Off", StringComparison.OrdinalIgnoreCase) => "Connected · screen off",
-                var s when s.Contains("Suspend", StringComparison.OrdinalIgnoreCase)
+                var s when s.Contains("Standby", StringComparison.OrdinalIgnoreCase)
+                        || s.Contains("Suspend", StringComparison.OrdinalIgnoreCase)
                         || s.Contains("Power Off", StringComparison.OrdinalIgnoreCase) => "Connected · TV is off",
                 _ => "Connected"
             };

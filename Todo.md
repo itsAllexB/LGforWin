@@ -1,6 +1,6 @@
 # LGforWin — TODO
 
-Ideas / next steps after **v2.0**.
+Ideas / next steps after **v2.1**.
 
 ## Distribution & polish
 - [ ] **App icon** — replace the placeholder sun with a real designed icon.

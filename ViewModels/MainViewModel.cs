@@ -445,7 +445,7 @@ public sealed partial class MainViewModel : ObservableObject, IDisposable
         }
     }
 
-    public bool CanAddSchedule => Schedules.Count < 5;
+    public bool CanAddSchedule => Schedules.Count < 10;
 
     [RelayCommand(CanExecute = nameof(CanAddSchedule))]
     private void AddSchedule()

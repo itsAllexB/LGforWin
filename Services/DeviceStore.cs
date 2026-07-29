@@ -120,7 +120,7 @@ public sealed class AppSettings
     /// <summary>App theme: 0 = follow system, 1 = light, 2 = dark.</summary>
     public int ThemeIndex { get; set; } = 0;
 
-    /// <summary>Up to 5 daily brightness schedules.</summary>
+    /// <summary>Up to 10 daily brightness schedules.</summary>
     public List<BrightnessSchedule> Schedules { get; set; } = new();
 
     /// <summary>

@@ -34,6 +34,11 @@ public sealed class TvController : IDisposable
     private bool _hasPending;
     private bool _connecting;
 
+    // A brightness value that couldn't be delivered because the TV was off or unreachable
+    // (typically a schedule firing while the panel sleeps). Pushed as soon as the TV is
+    // back — on reconnect, or on a standby→awake transition over a still-open socket.
+    private int? _missedWhileOff;
+
     public TvController(TvDevice device) => _device = device;
 
     public TvDevice Device => _device;
@@ -105,6 +110,7 @@ public sealed class TvController : IDisposable
 
                 ResolveMacInBackground(token);
                 await ReadBacklightAsync(token).ConfigureAwait(false);
+                ApplyMissedBacklightIfAny(); // after the read, so the catch-up value wins
 
                 // Schedule catch-up: once per session, after the read, apply the in-effect value.
                 if (!_startupApplied)
@@ -235,8 +241,16 @@ public sealed class TvController : IDisposable
             _hasPending = false;
         }
 
+        // Off/unreachable TVs can't take the write — remember it so the TV "wakes up with"
+        // the value it should have had (e.g. a schedule that fired while the panel slept).
         var client = _client;
-        if (client is null || !client.IsConnected) return;
+        var knownOff = _lastPowerState is not null && !IsAwakeState(_lastPowerState);
+        if (client is null || !client.IsConnected || knownOff)
+        {
+            lock (_gate) _missedWhileOff = value;
+            Log.Write($"{_device.Host}: TV is off — holding brightness {value} until it's back");
+            return;
+        }
 
         // OLED Light is the "backlight" key in the picture category. Setting it requires
         // the privileged luna call routed through the alert API (see WebOsClient).
@@ -252,11 +266,32 @@ public sealed class TvController : IDisposable
                 .ConfigureAwait(false);
             var ok = resp["returnValue"]?.GetValue<bool>() ?? false;
             if (!ok) Log.Write($"setBacklight {value} rejected by TV: {resp.ToJsonString()}");
+            lock (_gate) _missedWhileOff = null; // delivered — nothing left to catch up
         }
         catch (OperationCanceledException) { }
         catch (Exception ex)
         {
-            Log.Write($"setBacklight {value} FAILED: {ex.Message}");
+            // The socket died mid-write; keep the value for when the TV returns.
+            lock (_gate) _missedWhileOff = value;
+            Log.Write($"setBacklight {value} FAILED ({ex.Message}) — holding until the TV is back");
+        }
+    }
+
+    // Pushes a brightness value that a schedule (or the user) set while the TV was off.
+    private void ApplyMissedBacklightIfAny()
+    {
+        int? missed;
+        lock (_gate)
+        {
+            missed = _missedWhileOff;
+            _missedWhileOff = null;
+        }
+        if (missed is int value)
+        {
+            Log.Write($"{_device.Host}: TV is back — applying held brightness {value}");
+            _device.LastBacklight = value;
+            BacklightReported?.Invoke(value); // sync the slider
+            SetBacklight(value);              // push to the TV
         }
     }
 
@@ -355,9 +390,13 @@ public sealed class TvController : IDisposable
             var state = resp["state"]?.ToString();
             if (state is not null && state != _lastPowerState)
             {
+                // With Quick Start+ the socket often survives standby, so there is no
+                // reconnect to hook — this transition is where an off TV "comes back".
+                var wasOff = _lastPowerState is not null && !IsAwakeState(_lastPowerState);
                 _lastPowerState = state;
                 Log.Write($"{_device.Host}: powerState = {state}");
                 PowerStateReported?.Invoke(state);
+                if (wasOff && IsAwakeState(state)) ApplyMissedBacklightIfAny();
             }
             return state;
         }
@@ -369,8 +408,14 @@ public sealed class TvController : IDisposable
 
     private string? _lastPowerState;
 
-    /// <summary>True for a state in which the panel is lit or can be lit without a full power-on.</summary>
+    /// <summary>
+    /// True for a state in which the panel is lit or can be lit without a full power-on.
+    /// Careful with the names: "Active" and "Screen Off" are awake, but "Active Standby" —
+    /// what newer firmware (e.g. C3) reports in Quick Start+ standby — is OFF, as are the
+    /// older "Suspend" / "Power Off".
+    /// </summary>
     private static bool IsAwakeState(string state) =>
+        !state.Contains("Standby", StringComparison.OrdinalIgnoreCase) &&
         !state.Contains("Suspend", StringComparison.OrdinalIgnoreCase) &&
         !state.Contains("Power Off", StringComparison.OrdinalIgnoreCase);
 
@@ -503,6 +548,9 @@ public sealed class TvController : IDisposable
             _client.Dispose();
             _client = null;
         }
+        // Unknown until the next connection reports it; a stale "Suspend" would wrongly
+        // divert post-reconnect writes into the catch-up holding slot.
+        _lastPowerState = null;
     }
 
     public void Dispose()
