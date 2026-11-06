@@ -3,7 +3,7 @@
 Ideas / next steps after **v2.1**.
 
 ## Distribution & polish
-- [ ] **App icon** — replace the placeholder sun with a real designed icon.
+- [x] **App icon** — replace the placeholder sun with a real designed icon.
 - [ ] **Code signing** — get rid of the SmartScreen "unrecognized app" warning on first run.
 - [x] **Installer** — an Inno Setup `setup.exe` (Start-menu shortcut, uninstall entry) as an
       alternative to the portable zip. See `installer.iss` / `build.ps1 -Package`.
