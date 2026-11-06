@@ -14,12 +14,12 @@ from your desk — with a slider, the system tray, or global hotkeys.
 
 ## Download
 
-**[⬇ Download LGforWin v2.1.0](https://github.com/itsAllexB/LGforWin/releases/latest)**
+**[⬇ Download LGforWin v2.1.1](https://github.com/itsAllexB/LGforWin/releases/latest)**
 
 | | |
 |---|---|
-| [`LGforWin-2.1.0-setup.exe`](https://github.com/itsAllexB/LGforWin/releases/latest/download/LGforWin-2.1.0-setup.exe) | Installer — Start-menu shortcut and an uninstall entry. |
-| [`LGforWin-2.1.0-win-x64.zip`](https://github.com/itsAllexB/LGforWin/releases/latest/download/LGforWin-2.1.0-win-x64.zip) | Portable — unzip and run `LGforWin.exe`. |
+| [`LGforWin-2.1.1-setup.exe`](https://github.com/itsAllexB/LGforWin/releases/latest/download/LGforWin-2.1.1-setup.exe) | Installer — Start-menu shortcut and an uninstall entry. |
+| [`LGforWin-2.1.1-win-x64.zip`](https://github.com/itsAllexB/LGforWin/releases/latest/download/LGforWin-2.1.1-win-x64.zip) | Portable — unzip and run `LGforWin.exe`. |
 
 64-bit Windows 10 1809 or newer. Nothing else to install — the .NET runtime and the
 Windows App SDK are bundled. The build isn't code-signed yet, so SmartScreen shows an
